@@ -80,16 +80,6 @@ class CardCountController
     );
   }
 
-  void tmptest() {
-    print("===== tmptest =====");
-    print("nCards " + state.nCards.toString());
-
-    state = state.copyWith(
-      nCards: state.nCards + 1,
-    );
-    print("nCards " + state.nCards.toString());
-  }
-
   void reset() {
     print("===== reset =====");
 
@@ -129,17 +119,11 @@ class CardCountController
   }
 
   void drawNextCard() {
-    print("===== drawNextCard =====");
     if (state.isQuizActive || state.isGameOver) return;
 
     final card = state.shoe.drawCard();
     final newCardCount = state.nCards + 1;
     final reachedTarget = newCardCount >= state.targetCardsForQuiz;
-
-    // print(state.config);
-    print(state.nCards);
-    print(newCardCount);
-    print(reachedTarget);
 
     state = state.copyWith(
       currentCard: card,
@@ -177,6 +161,10 @@ class CardCountController
       );
       reset();
     }
+  }
+
+  void nextRound() {
+
   }
 }
 

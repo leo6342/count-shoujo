@@ -1,9 +1,9 @@
 import 'package:card_counter/common/cards/shoes.dart';
 import 'package:card_counter/screens/cardCount/training/controller/card_count_controller.dart';
 import 'package:card_counter/screens/cardCount/training/controller/game_config.dart';
-import 'package:card_counter/screens/cardCount/training/widget/count_view.dart';
-import 'package:card_counter/screens/cardCount/training/widget/pop_quiz.dart';
-import 'package:card_counter/screens/cardCount/training/widget/result.dart';
+import 'package:card_counter/screens/cardCount/training/subpage/count_view/count_view.dart';
+import 'package:card_counter/screens/cardCount/training/subpage/pop_quiz/pop_quiz.dart';
+import 'package:card_counter/screens/cardCount/training/subpage/result/result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,9 +15,6 @@ class CardCountTrainingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Filter filter = _getShoeFilter(gameMode);
 
-    // ✅ FIX: Use a stable config instance or cache it based on gameMode.
-    // Since gameMode doesn't change, we can memoize or use a constant/static config per mode,
-    // or ensure CardCountGameConfig overrides operator == and hashCode.
     final CardCountGameConfig config = _getConfigForMode(gameMode);
 
     final state = ref.watch(cardCountControllerProvider(config));
@@ -32,8 +29,9 @@ class CardCountTrainingScreen extends ConsumerWidget {
         child: Center(
           child: state.isGameOver
               ? ResultView(
-                  correctAttempts: state.correctAttempts,
+                  trainingState: state,
                   onRestart: () => controller.restartSession(),
+                  onNextRound: () => controller.restartSession(), //TODO: fix this shit
                 )
               : state.isQuizActive
                   ? PopQuizView(
@@ -58,7 +56,7 @@ class CardCountTrainingScreen extends ConsumerWidget {
   // ✅ Helper to return a stable config instance per mode
   CardCountGameConfig _getConfigForMode(String mode) {
     return CardCountGameConfig(
-      totalRounds: 10,
+      totalRounds: 1,
       filter: _getShoeFilter(mode),
     );
   }
